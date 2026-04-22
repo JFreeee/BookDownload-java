@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiang.dao.BookMapper">
+
+	<resultMap id="bookMap" type="com.jiang.entity.Book">
+		<id column="id" property="id" />
+		<result column="email" property="email" />
+		<result column="title" property="title" />
+		<result column="pic" property="pic" />
+		<result column="file_path" property="file_path" />
+		<result column="upload_time" property="upload_time" />
+	</resultMap>
+
+	<!-- 查询全部 -->
+	<select id="getAllBooks" resultMap="bookMap">
+		select id, email, title, pic,
+		file_path, upload_time
+		from ebooks
+		order by upload_time desc
+	</select>
+
+	<!-- 搜索 -->
+	<select id="searchBooks" resultMap="bookMap">    <!-- resultMap手动映射，是XML里的映射ID，不需要全路径。 -->
+		select id, email, title, pic,
+		file_path, upload_time
+		from ebooks
+		where
+		title like concat('%',
+		#{keyword}, '%')
+	</select>
+
+	<!-- 根据图书ID返回图书 -->
+	<select id="getBookById" resultType="com.jiang.entity.Book">  <!-- resultType是自动映射，java类，需要全路径。 -->
+		SELECT id, email, title, pic, file_path,
+		upload_time
+		FROM ebooks
+		WHERE id
+		= #{id}
+	</select>
+
+	<!-- 上传图书 -->
+	<select id="findByTitle" resultMap="bookMap">
+		SELECT * FROM ebooks WHERE
+		title = #{title}
+	</select>
+	<insert id="insertBook">
+		INSERT INTO ebooks (email, title, pic, file_path,
+		upload_time)
+		VALUES (#{email}, #{title}, #{pic}, #{file_path}, NOW())
+	</insert>
+
+	<!-- 删除图书 -->
+	<delete id="deleteById">
+		DELETE FROM ebooks WHERE id = #{id}
+	</delete>
+	
+	<!-- 根据邮箱查询上传的图书 -->
+	<select id="getBooksByEmail" resultMap="bookMap">
+    SELECT id, email, title, pic, file_path, upload_time
+    FROM ebooks
+    WHERE email = #{email}
+</select>
+	
+
+</mapper>

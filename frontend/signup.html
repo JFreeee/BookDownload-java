@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>那抓的图书馆</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/signup.css">
+</head>
+
+<body>
+<div id="app">
+    <nav class="navbar navbar-expand-lg navbar-custom px-4">
+        <h2 class="mb-0 mr-4">📚| 电子书下载网站</h2>
+    </nav>
+
+    <div class="box0">
+        <h2>👩🏻‍🎓用户注册</h2>
+
+        <div class="form-group">
+            <label for="email">用户名:</label>
+            <span>{{ emailMsg }}</span>
+            <input type="email" name="email" class="form-control" id="email" v-model="email" placeholder="请输入邮箱地址">
+        </div>
+
+        <div class="form-group">
+            <label for="password">密码:</label>
+            <span>{{ passwordMsg }}</span>
+            <input type="password" name="password" class="form-control" id="password" v-model="password" placeholder="请输入密码" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">密码确认:</label>
+            <span>{{ passwordMsg2 }}</span>
+            <input type="password" name="password2" class="form-control" id="password2" v-model="password2" placeholder="请再次输入密码" required>
+        </div>
+
+        <div id="result" style="color:green; margin-top:20px;">{{ resultMsg }}</div>
+
+        <div class="d-flex justify-content-between">
+            <a href="login.html" class="btn btn-secondary">返回登陆</a>
+            <div class="text-right">
+                <button type="button" class="btn btn-primary" @click="signup">注册</button>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el:'#app',
+
+        data:{
+            email: '',
+            password: '',
+            password2: '',
+
+            emailMsg: '',
+            passwordMsg: '',
+            passwordMsg2: '',
+            resultMsg:''
+        },
+
+        methods:{
+
+            signup(){
+
+                // 清空提示
+                this.emailMsg = ''
+                this.passwordMsg = ''
+                this.passwordMsg2 = ''
+                this.resultMsg = ''
+
+                //发送请求
+                axios.post('http://localhost:8080/user/signup',{
+                    email:this.email.trim(),
+                    password:this.password.trim(),
+                    password2:this.password2.trim()
+                })
+                .then(res => {
+
+                    let data = res.data
+
+                    if(data.code === 0){
+                        this.emailMsg = data.msg
+                    }else if(data.code === 1){
+                        this.passwordMsg = data.msg
+                    }else if(data.code === 2){
+                        this.passwordMsg2 = data.msg
+                     }else if(data.code === 100){
+                        this.resultMsg = data.msg
+
+                        setTimeout(() => {
+                            window.location.href = "login.html"
+                        },3000)
+                     }
+                })
+                .catch(err => {
+                    console.error("注册请求失败",err);
+                    this.resultMsg = "网络异常，请稍后重试";
+                })
+
+            }
+
+        }
+
+        })
+</script>
+
+</body>
+
+</html>

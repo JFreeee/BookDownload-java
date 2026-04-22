@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>那抓的图书馆</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-custom px-4">
+            <h2 class="mb-0 mr-4">📚| 电子书下载</h2>
+
+            <!-- 搜索框 -->
+            <div class="form-inline mx-auto">
+                <input v-model="keyword" class="form-control mr-sm-2" type="search" placeholder="搜索图书">
+                <button class="btn btn-outline-light my-2 my-sm-0" @click="search">搜索</button>
+            </div>
+
+            <!-- 导航菜单 -->
+            <ul class="navbar-nav ml-auto">
+                <li v-if="loggedIn" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        {{ user.email }}
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+
+                        <a v-if="user.is_admin == 1" class="dropdown-item" href="admin.html">管理员页面</a>
+
+                        <a class="dropdown-item" href="mypage.html">个人主页</a>
+                        <a class="dropdown-item" href="upload.html">上传图书</a>
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" @click.prevent="logout">退出登录</a>
+                    </div>
+                </li>
+
+                <li v-else class="nav-item">
+                    <a class="nav-link" href="#" @click.prevent="goLogin">登录</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 图书列表 -->
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-2 mb-4" v-for="book in books" :key="book.id">
+                    <div class="card h-100 shadow-sm">
+                        <a href="#" @click.prevent="goDetail(book.id)">
+                            <img :src="book.pic" class="card-img-top">
+                        </a>
+
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <a href="#" @click.prevent="goDetail(book.id)">
+                                    {{ book.title }}
+                                </a>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+
+                <p v-if="books.length === 0">没有找到图书</p>
+            </div>
+        </div>
+    </div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
+    <script>
+        
+        axios.defaults.withCredentials = true
+
+        new Vue({
+            el: '#app',
+
+            data: {
+                loggedIn: false,
+                user: {},
+                books: [],
+                keyword: ''
+            },
+
+            mounted() {
+                this.loadNav()
+                this.loadBooks()
+            },
+
+            methods: {
+
+                // ===== 加载导航栏 =====
+                loadNav() {
+                    axios.post('http://localhost:8080/index/nav'
+
+                    )
+                        .then(res => {
+                            let data = res.data
+
+                            this.loggedIn = data.loggedIn
+                            this.user = data
+                        })
+                        .catch(() => {
+                            alert("加载导航失败")
+                        })
+                },
+
+                // ===== 加载图书 =====
+                loadBooks() {
+                    axios.post('http://localhost:8080/index/books', {
+                        keyword: this.keyword
+                    })
+                        .then(res => {
+                            this.books = res.data.books
+                        })
+                        .catch(() => {
+                            alert("加载图书失败")
+                        })
+                },
+
+                // ===== 搜索 =====
+                search() {
+                    this.loadBooks()
+                },
+
+                // ===== 点击图书 =====
+                goDetail(id) {
+                    if (!this.loggedIn) {
+                        alert("请先登录")
+                        return
+                    }
+                    window.location.href = "book_info.html?id=" + id
+                },
+
+                // ===== 退出登录 =====
+                logout() {
+                    axios.post('http://localhost:8080/user/logout')
+                        .then(res => {
+                            if (res.data.success) {
+                                this.loadNav()
+                                this.loadBooks()
+                            }
+                        })
+                },
+
+                //去登陆界面
+                goLogin() {
+                    window.location.href = "login.html"
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mypage.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- ===== 导航栏 ===== -->
+        <nav class="navbar navbar-expand-lg navbar-custom px-4">
+            <h2 class="mb-0 mr-4">📚| 电子书下载网站</h2>
+
+            <button class="btn btn-light" @click="goHome">⬅返回首页</button>
+
+            <!-- 导航菜单 -->
+            <ul class="navbar-nav ml-auto">
+                <li v-if="loggedIn" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        {{ user.email }}
+                    </a>
+            
+                    <div class="dropdown-menu dropdown-menu-right">
+            
+                        <a v-if="user.is_admin == 1" class="dropdown-item" href="admin.html">管理员页面</a>
+        
+                        <a class="dropdown-item" href="upload.html">上传图书</a>
+            
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" @click.prevent="logout">退出登录</a>
+                    </div>
+                </li>
+            
+                <li v-else class="nav-item">
+                    <a class="nav-link" href="#" @click.prevent="goLogin">登录</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- ===== 导航栏 ===== -->
+        <!-- 账号名 -->
+        <div class="mb-3">
+            <h4>
+                账号名：{{ user.email }}
+            </h4>
+
+        </div>
+        <br>
+        <!-- 修改密码 -->
+        <div class="container mt-5">
+            <button class="btn btn-warning btn-sm" @click="showPwd = !showPwd">
+                修改密码
+            </button>
+
+            <div v-show="showPwd" style="margin-top:10px;">
+                <input v-model="oldPwd" type="password" class="form-control mb-2" placeholder="旧密码">
+                <input v-model="newPwd" type="password" class="form-control mb-2" placeholder="新密码">
+                <input v-model="newPwd2" type="password" class="form-control mb-2" placeholder="确认新密码">
+                <button class="btn btn-primary btn-sm" @click="changePwd">
+                    确认修改
+                </button>
+            </div>
+        </div>
+        <br>
+        <!-- 上传图书记录 -->
+        <h4>我上传的图书</h4>
+        <table class="table table-bordered">
+            <!-- 表格头部 -->
+            <thead>
+                <tr>
+                    <th>封面</th>
+                    <th>书名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <!-- 表格主体 -->
+            <tbody>
+                <tr v-for="book in books" :key="book.id">
+                    <td>
+                        <img :src="book.pic" style="width:60px;">
+                    </td>
+                    <td>《{{ book.title }}》</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @click="deleteBook(book.id)">
+                            删除
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        axios.defaults.withCredentials = true
+
+        new Vue({
+            el: "#app",
+
+            data: {
+                loggedIn: false,
+                user: {},
+
+                showPwd: false,
+                oldPwd: '',
+                newPwd: '',
+                newPwd2: '',
+
+                books: []
+            },
+
+            mounted() {
+                this.loadNav()
+                this.loadMyPage()
+            },
+
+            methods: {
+
+                // ===== 导航 =====
+                loadNav() {
+                    axios.post('http://localhost:8080/index/nav')
+                        .then(res => {
+                            this.loggedIn = res.data.loggedIn
+                            this.user = res.data
+                        })
+                },
+
+                // ===== 返回首页 =====
+                goHome() {
+                    window.location.href = "index.html"
+                },
+
+                // ===== 加载个人信息 =====
+                loadMyPage() {
+                    axios.get('http://localhost:8080/user/mypage')
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                // this.user = res.data.data
+                                this.books = res.data.data.books
+                            } else {
+                                alert("请先登录")
+                                window.location.href = "login.html"
+                            }
+                        })
+                        .catch(() => {
+                            alert("加载失败")
+                        })
+                },
+
+                // ===== 修改密码 =====
+                changePwd() {
+
+                    if (!this.oldPwd || !this.newPwd || !this.newPwd2) {
+                        alert("请输入完整信息")
+                        return
+                    }
+
+                    axios.post('http://localhost:8080/user/changePassword', {
+                        oldPwd: this.oldPwd,
+                        newPwd: this.newPwd,
+                        newPwd2: this.newPwd2
+                    })
+                        .then(res => {
+                            alert(res.data.msg)
+
+                            if (res.data.code === 1) {
+                                this.showPwd = false
+                                this.oldPwd = ''
+                                this.newPwd = ''
+                                this.newPwd2 = ''
+                            }
+                        })
+                },
+
+                // ===== 删除图书 =====
+                deleteBook(id) {
+
+                    if (!confirm("确定删除吗？")) return
+
+                    axios.post('http://localhost:8080/book/delete', { id: id })
+                        .then(res => {
+                            alert(res.data.msg)
+
+                            if (res.data.code === 1) {
+                                this.books = this.books.filter(b => b.id !== id)
+                            }
+                        })
+                },
+
+                // ===== 退出登录 =====
+                logout() {
+                    axios.post('http://localhost:8080/user/logout')
+                        .then(res => {
+                            if (res.data.success) {
+                                window.location.href = "index.html"
+                            }
+                        })
+                },
+
+                //去登陆界面
+                goLogin() {
+                    window.location.href = "login.html"
+                }
+
+            }
+        })
+    </script>
+
+</body>
+
+</html>
