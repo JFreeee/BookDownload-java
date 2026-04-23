@@ -14,7 +14,7 @@ public WebMvcConfigurer corsConfigurer() {
 	public void addCorsMappings(CorsRegistry registry) {
 		
 		registry.addMapping("/**")
-		.allowedOrigins("http://localhost:5500")  //前端地址
+		.allowedOrigins("https://book-download-java.vercel.app")  //后端地址
 		.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 		.allowedHeaders("*")
 		.allowCredentials(true);//允许session/cookie
