@@ -48,14 +48,14 @@
             </div>
             <br>
             <div class="form-group">
-                <h4>封面图片</h4>
+                <h4>封面图片 (不得大于10M)</h4>
                 <input type="file" id="pic" accept="image/*" @change="handlePic" class="form-control-file" required>
             </div>
 
             <br>
 
             <div class="form-group">
-                <h4>图书文件(pdf 或 epub,文件不得大于10M)</h4>
+                <h4>图书文件 (pdf 或 epub, 文件不得大于10M)</h4>
                 <input type="file" id="bookfile" accept=".pdf,.epub" @change="handleBook" class="form-control-file"
                     required>
             </div>
@@ -65,7 +65,8 @@
             <button id="uploadBtn" class="btn btn-primary" type="button" @click="upload">
                 {{ uploading ? "正在上传..." : "上传" }}
             </button>
-
+            <br>
+            <div v-html="result"></div>
             <div id="result" class="mt-3"></div>
         </div>
     </div>
@@ -99,7 +100,7 @@
                 },
 
                 mounted() {
-                    console.log("Vue 已挂载");
+                    // console.log("Vue 已挂载");
                     this.loadNav()
                 },
 
