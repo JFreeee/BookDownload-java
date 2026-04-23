@@ -119,6 +119,19 @@ public class BookController {
 				return res;				
 			}
 	         
+			//判断文件大小
+			long maxSize = 10 * 1024 * 1024; // 10MB
+			if (bookfile.getSize() > maxSize) {
+			    res.put("code", 0);
+			    res.put("msg", "PDF文件不能超过10MB");
+			    return res;
+			}
+
+			if (pic.getSize() > maxSize) {
+			    res.put("code", 0);
+			    res.put("msg", "图片不能超过10MB");
+			    return res;
+			}
 			
 			//  上传到云
 			// 上传图片（默认 image）
