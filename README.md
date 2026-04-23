@@ -24,6 +24,8 @@
 - 后端：https://bookdownload-java.onrender.com
 ---
 
-## ⚠️ 注意
-由于 Render 免费服务存在冷启动机制，首次访问后端可能需要约 1 分钟时间启动。
+## ❗❗❗ 注意
+<p style="color:red; font-size:18px;">
+由于 Render 免费服务存在冷启动机制，首次访问后端可能需要约 1 分钟时间启动。<br>
 请耐心等待后刷新页面。
+</p>
