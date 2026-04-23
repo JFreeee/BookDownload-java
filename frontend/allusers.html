@@ -125,7 +125,7 @@
 
                 // ===== 加载导航栏 =====
                 loadNav() {
-                    axios.post('http://localhost:8080/index/nav')
+                    axios.post('https://bookdownload-java.onrender.com/index/nav')
                         .then(res => {
                             let data = res.data
 
@@ -139,7 +139,7 @@
 
                 // ===== 当前管理员信息 =====
                 loadMyInfo() {
-                    axios.get('http://localhost:8080/user/mypage')
+                    axios.get('https://bookdownload-java.onrender.com/user/mypage')
                         .then(res => {
                             if (res.data.code === 1) {
                                 // this.user = res.data.data
@@ -155,7 +155,7 @@
 
                 // ===== 所有用户 =====
                 loadUsers() {
-                    axios.get('http://localhost:8080/admin/users')
+                    axios.get('https://bookdownload-java.onrender.com/admin/users')
                         .then(res => {
                             if (res.data.code === 1) {
                                 this.users = res.data.data
@@ -172,7 +172,7 @@
 
                     if (!confirm(msg)) return
 
-                    axios.post('http://localhost:8080/admin/setAdmin', {
+                    axios.post('https://bookdownload-java.onrender.com/admin/setAdmin', {
                         id: u.id
                     })
                         .then(res => {
@@ -187,7 +187,7 @@
                 deleteUser(email) {
                     if (!confirm("确定删除？")) return
 
-                    axios.post('http://localhost:8080/admin/deleteUser', {
+                    axios.post('https://bookdownload-java.onrender.com/admin/deleteUser', {
                         email: email
                     })
                         .then(res => {
@@ -200,7 +200,7 @@
 
                 // ===== 退出登录 =====
                 logout() {
-                    axios.post('http://localhost:8080/user/logout')
+                    axios.post('https://bookdownload-java.onrender.com/user/logout')
                         .then(res => {
                             if (res.data.success) {
                                 window.location.href = "index.html"

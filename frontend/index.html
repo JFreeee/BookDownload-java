@@ -106,7 +106,7 @@
 
                 // ===== 加载导航栏 =====
                 loadNav() {
-                    axios.post('http://localhost:8080/index/nav'
+                    axios.post('https://bookdownload-java.onrender.com/index/nav'
 
                     )
                         .then(res => {
@@ -122,7 +122,7 @@
 
                 // ===== 加载图书 =====
                 loadBooks() {
-                    axios.post('http://localhost:8080/index/books', {
+                    axios.post('https://bookdownload-java.onrender.com/index/books', {
                         keyword: this.keyword
                     })
                         .then(res => {
@@ -149,7 +149,7 @@
 
                 // ===== 退出登录 =====
                 logout() {
-                    axios.post('http://localhost:8080/user/logout')
+                    axios.post('https://bookdownload-java.onrender.com/user/logout')
                         .then(res => {
                             if (res.data.success) {
                                 this.loadNav()

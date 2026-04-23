@@ -22,18 +22,18 @@
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                         {{ user.email }}
                     </a>
-            
+
                     <div class="dropdown-menu dropdown-menu-right">
-            
+
                         <a v-if="user.is_admin == 1" class="dropdown-item" href="admin.html">管理员页面</a>
-            
+
                         <a class="dropdown-item" href="mypage.html">个人主页</a>
-            
+
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" @click.prevent="logout">退出登录</a>
                     </div>
                 </li>
-            
+
                 <li v-else class="nav-item">
                     <a class="nav-link" href="#" @click.prevent="goLogin">登录</a>
                 </li>
@@ -107,7 +107,7 @@
 
                     // ===== 加载导航栏 =====
                     loadNav() {
-                        axios.post('http://localhost:8080/index/nav')
+                        axios.post('https://bookdownload-java.onrender.com/index/nav')
                             .then(res => {
                                 this.loggedIn = res.data.loggedIn
                                 this.user = res.data
@@ -165,7 +165,7 @@
 
                         this.uploading = true
 
-                        axios.post('http://localhost:8080/book/upload', formData)
+                        axios.post('https://bookdownload-java.onrender.com/book/upload', formData)
                             .then(res => {
                                 if (res.data.code === 1) {
                                     alert("上传成功")
@@ -192,7 +192,7 @@
 
                     // ===== 退出登录 =====
                     logout() {
-                        axios.post('http://localhost:8080/user/logout')
+                        axios.post('https://bookdownload-java.onrender.com/user/logout')
                             .then(res => {
                                 if (res.data.success) {
                                     this.loadNav()

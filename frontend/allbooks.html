@@ -127,7 +127,7 @@
 
                 // ===== 加载导航栏 =====
                 loadNav() {
-                    axios.post('http://localhost:8080/index/nav')
+                    axios.post('https://bookdownload-java.onrender.com/index/nav')
                         .then(res => {
                             let data = res.data
                             this.loggedIn = data.loggedIn
@@ -140,7 +140,7 @@
 
                 // ===== 所有图书=====
                 loadBooks() {
-                    axios.post('http://localhost:8080/book/allbooks')
+                    axios.post('https://bookdownload-java.onrender.com/book/allbooks')
                         .then(res => {
                             console.log(res.data)
 
@@ -159,7 +159,7 @@
                 deleteBook(id) {
                     if (!confirm("确定删除吗？")) return
 
-                    axios.post('http://localhost:8080/book/delete', { id: id })
+                    axios.post('https://bookdownload-java.onrender.com/book/delete', { id: id })
                         .then(res => {
                             alert(res.data.msg)
 
@@ -174,7 +174,7 @@
 
                 //=======退出登录=======
                 logout() {
-                    axios.post('http://localhost:8080/user/logout')
+                    axios.post('https://bookdownload-java.onrender.com/user/logout')
                         .then(res => {
                             if (res.data.success) {
                                 window.location.href = "index.html"

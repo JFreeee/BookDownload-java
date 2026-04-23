@@ -132,7 +132,7 @@
 
                 // ===== 导航 =====
                 loadNav() {
-                    axios.post('http://localhost:8080/index/nav')
+                    axios.post('https://bookdownload-java.onrender.com/index/nav')
                         .then(res => {
                             this.loggedIn = res.data.loggedIn
                             this.user = res.data
@@ -146,7 +146,7 @@
 
                 // ===== 加载个人信息 =====
                 loadMyPage() {
-                    axios.get('http://localhost:8080/user/mypage')
+                    axios.get('https://bookdownload-java.onrender.com/user/mypage')
                         .then(res => {
                             if (res.data.code === 1) {
                                 // this.user = res.data.data
@@ -169,7 +169,7 @@
                         return
                     }
 
-                    axios.post('http://localhost:8080/user/changePassword', {
+                    axios.post('https://bookdownload-java.onrender.com/user/changePassword', {
                         oldPwd: this.oldPwd,
                         newPwd: this.newPwd,
                         newPwd2: this.newPwd2
@@ -191,7 +191,7 @@
 
                     if (!confirm("确定删除吗？")) return
 
-                    axios.post('http://localhost:8080/book/delete', { id: id })
+                    axios.post('https://bookdownload-java.onrender.com/book/delete', { id: id })
                         .then(res => {
                             alert(res.data.msg)
 
@@ -203,7 +203,7 @@
 
                 // ===== 退出登录 =====
                 logout() {
-                    axios.post('http://localhost:8080/user/logout')
+                    axios.post('https://bookdownload-java.onrender.com/user/logout')
                         .then(res => {
                             if (res.data.success) {
                                 window.location.href = "index.html"
