@@ -143,7 +143,7 @@ public class BookController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			res.put("code", 0);
-			res.put("msg", "上传失败");
+			res.put("msg", "上传失败" + e.getMessage());
 		}
 		return res;
 	}
