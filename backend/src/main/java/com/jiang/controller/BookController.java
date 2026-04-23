@@ -156,7 +156,6 @@ public class BookController {
 
 	    String email = (String) session.getAttribute("email");
 	    Integer id = params.get("id");
-
 	    Map<String, Object> res = new HashMap<>();
 
 	    if (email == null) {

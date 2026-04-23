@@ -3,6 +3,7 @@ package com.jiang.service;
 import java.io.IOException;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,29 +14,14 @@ import com.cloudinary.utils.ObjectUtils;
 @Service
 public class CloudinaryService {
 
+	@Autowired
     private Cloudinary cloudinary;
-
-    // ===== 从 application.properties 读取 =====
-    public CloudinaryService() {
-    		// 从环境变量读取
-            String cloudName = System.getenv("CLOUD_NAME");
-            String apiKey = System.getenv("API_KEY");
-            String apiSecret = System.getenv("API_SECRET");
-
-            cloudinary = new Cloudinary(ObjectUtils.asMap(
-                    "cloud_name", cloudName,
-                    "api_key", apiKey,
-                    "api_secret", apiSecret
-            ));
-    }
 
     // ===== 上传图片 =====
     public String upload(MultipartFile file, String folder) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
-                ObjectUtils.asMap(
-                        "folder", folder
-                )
+                ObjectUtils.asMap("folder", folder)
         );
         return uploadResult.get("secure_url").toString();
     }
