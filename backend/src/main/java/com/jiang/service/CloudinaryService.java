@@ -38,7 +38,7 @@ public class CloudinaryService {
         return uploadResult.get("secure_url").toString();
     }
 
-    // ===== 删除文件（通用）=====
+    // ===== 删除文件=====
     public void delete(String url) throws Exception {
 
         // 解析 public_id

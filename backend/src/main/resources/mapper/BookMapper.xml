@@ -33,7 +33,7 @@
 	</select>
 
 	<!-- 根据图书ID返回图书 -->
-	<select id="getBookById" resultType="com.jiang.entity.Book">  <!-- resultType是自动映射，java类，需要全路径。 -->
+	<select id="getBookById" resultMap="bookMap">  <!-- resultType是自动映射，java类，需要全路径。 -->
 		SELECT id, email, title, pic, file_path,
 		upload_time
 		FROM ebooks
